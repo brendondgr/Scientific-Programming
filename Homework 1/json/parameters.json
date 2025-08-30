@@ -34,8 +34,7 @@
             "Patient_ID",
             "Health_Camp_ID",
             "Donation",
-            "Health_Score",
-            "Unnamed: 4"
+            "Health_Score"
         ],
         "file_name": "healthcare.csv",
         "other_parameters": {}

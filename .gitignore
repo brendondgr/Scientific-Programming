@@ -1,5 +1,8 @@
 # Custom
 pyproject.toml
+uv.lock
+*_summary.csv
+*_transformed.csv
 
 # Python
 __pycache__/
@@ -187,7 +190,7 @@ CMakeCache.txt
 CMakeFiles
 CMakeScripts
 Testing
-Makefile
+# Makefile
 cmake_install.cmake
 install_manifest.txt
 compile_commands.json
@@ -257,3 +260,4 @@ Thumbs.db
 # OS generated files
 .directory
 desktop.ini
+
