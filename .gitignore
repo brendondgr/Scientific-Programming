@@ -3,6 +3,7 @@ pyproject.toml
 uv.lock
 *_summary.csv
 *_transformed.csv
+o
 
 # Python
 __pycache__/
