@@ -32,7 +32,7 @@
                 "mean",
                 "percent"
             ],
-            "normalize": false
+            "normalize": true
         }
     },
     "healthcare.csv": {
@@ -45,7 +45,7 @@
         ],
         "file_name": "healthcare.csv",
         "other_parameters": {
-            "normalize": false
+            "normalize": true
         }
     }
 }

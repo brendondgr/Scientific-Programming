@@ -223,6 +223,11 @@ int main(int argc, char* argv[]) {
         }
         csv_data.erase(csv_data.begin()); // Remove header row
 
+        // Enforce lines_to_read
+        if (lines_to_read > 0 && csv_data.size() > static_cast<size_t>(lines_to_read)) {
+            csv_data.resize(lines_to_read);
+        }
+
         // Store numerical data for calculations, sized by columns from JSON
         std::vector<std::vector<double>> numerical_data(column_names.size());
 
@@ -246,12 +251,34 @@ int main(int argc, char* argv[]) {
             }
         }
 
+        // Write summary statistics to a CSV file from raw data
+        std::string summary_file_name = csv_file_name.substr(0, csv_file_name.find(".csv")) + "_summary.csv";
+        std::string full_summary_path = data_directory + "/" + summary_file_name;
+        std::ofstream summary_file(full_summary_path);
+        if (!summary_file.is_open()) {
+            std::cerr << "Error: Unable to open summary file " << full_summary_path << " for writing." << std::endl;
+        } else {
+            // Write CSV header
+            summary_file << "column_name,mean,stddev,param_count\n";
+            summary_file << std::fixed << std::setprecision(2);
+
+            size_t param_count = lines_to_read; // Get param_count from lines_to_read
+            for (size_t i = 0; i < numerical_data.size(); ++i) {
+                if (!numerical_data[i].empty()) {
+                    auto [mean, stddev] = computeMeanAndStdDev(numerical_data[i]);
+                    summary_file << column_names[i] << "," << mean << "," << stddev << "," << param_count << "\n";
+                }
+            }
+            summary_file.close();
+            std::cout << "Summary statistics written to: " << full_summary_path << std::endl;
+        }
+
         bool normalize = false;
         if (val.contains("other_parameters") && val["other_parameters"].contains("normalize")) {
             normalize = val["other_parameters"]["normalize"].get<bool>();
         }
 
-        // Compute mean and standard deviation for each column
+        // Compute mean and standard deviation for each column and conditionally normalize
         for (size_t i = 0; i < numerical_data.size(); ++i) {
             if (!numerical_data[i].empty()) {
                 auto [mean, stddev] = computeMeanAndStdDev(numerical_data[i]);
@@ -261,26 +288,6 @@ int main(int argc, char* argv[]) {
                     normalizeColumn(numerical_data[i]);
                 }
             }
-        }
-
-        // Write summary statistics to a CSV file
-        std::string summary_file_name = csv_file_name.substr(0, csv_file_name.find(".csv")) + "_summary.csv";
-        std::string full_summary_path = data_directory + "/" + summary_file_name;
-        std::ofstream summary_file(full_summary_path);
-        if (!summary_file.is_open()) {
-            std::cerr << "Error: Unable to open summary file " << full_summary_path << " for writing." << std::endl;
-        } else {
-            // Write CSV header
-            summary_file << "column_name,mean,stddev\n";
-            summary_file << std::fixed << std::setprecision(2);
-            for (size_t i = 0; i < numerical_data.size(); ++i) {
-                if (!numerical_data[i].empty()) {
-                    auto [mean, stddev] = computeMeanAndStdDev(numerical_data[i]);
-                    summary_file << column_names[i] << "," << mean << "," << stddev << "\n";
-                }
-            }
-            summary_file.close();
-            std::cout << "Summary statistics written to: " << full_summary_path << std::endl;
         }
 
         // Write transformed data to a new CSV file only if normalization was performed

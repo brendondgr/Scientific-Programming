@@ -2,6 +2,35 @@
 
 This project provides a set of tools to process and visualize data from CSV files. It includes a C++ application for numerical processing and two Python scripts for generating configuration files and plotting the results.
 
+## Full Pipeline Execution (Commands ONLY)
+Here is the full Pipeline if you want to save some time.
+### Linux (UV)
+```bash
+uv init
+uv sync
+uv pip install -r requirements.txt
+uv run parameters.py --path data/ --normalize
+make
+./o data/ json/parameters.json
+uv run visualize.py --ascending
+make clean
+```
+
+### Windows (UV)
+```bash
+uv init
+uv sync
+uv pip install -r requirements.txt
+uv run parameters.py --path data/ --normalize
+make
+o.exe data/ json/parameters.json
+uv run visualize.py --ascending
+make clean
+```
+
+
+
+
 ## Setup and Execution
 
 The following steps outline the process of compiling and running the different components of this project.
@@ -13,7 +42,7 @@ First, run the `parameters.py` script to scan the `data/` directory and create a
 **Usage:**
 
 ```bash
-python3 parameters.py --path <directory_containing_csvs> [--normalize]
+python parameters.py --path <directory_containing_csvs> [--normalize]
 ```
 
 - `--path`: (Required) Specifies the directory where your CSV files are located.
@@ -22,7 +51,7 @@ python3 parameters.py --path <directory_containing_csvs> [--normalize]
 **Example:**
 
 ```bash
-python3 parameters.py --path data/ --normalize
+python parameters.py --path data/ --normalize
 ```
 
 ### 2. Compile and Run the C++ Application
@@ -62,20 +91,21 @@ Finally, use the `visualize.py` script to generate plots from the processed data
 **Usage:**
 
 ```bash
-python3 visualize.py [--interval <sampling_interval>] [--histograms] [--params-file <path_to_json>]
+python visualize.py [--data-dir <directory_where_data_is>] [--images-dir <directory_to_save_images>] [--ascending | --descending]
 ```
 
-- `--interval`: (Optional) An integer for the sampling interval (e.g., `25` plots every 25th row). Defaults to `25`.
-- `--histograms`: (Optional) If included, generates histograms for each data column.
-- `--params-file`: (Optional) Path to the JSON parameters file. Defaults to `json/parameters.json`.
+- `--data-dir`: (Optional) Specifies the directory where your data files are located. Defaults to `data`.
+- `--images-dir`: (Optional) Specifies the directory where the generated plots will be saved. Defaults to `images`.
+- `--ascending`: (Optional) Sorts the data in ascending order.
+- `--descending`: (Optional) Sorts the data in descending order.
 
 **Example:**
 
 ```bash
-python3 visualize.py --interval 50 --histograms
+python visualize.py --ascending
 ```
 
-This will save the generated plots as PNG images in the `images/` directory.
+This will save the generated plot as a PNG image in the `images/` directory.
 
 ### Cleaning Up
 
