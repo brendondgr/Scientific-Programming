@@ -26,7 +26,14 @@
             "fetal_health"
         ],
         "file_name": "fetal.csv",
-        "other_parameters": {}
+        "other_parameters": {
+            "do_not_include": [
+                "histogram",
+                "mean",
+                "percent"
+            ],
+            "normalize": false
+        }
     },
     "healthcare.csv": {
         "lines_to_read": 6218,
@@ -37,6 +44,8 @@
             "Health_Score"
         ],
         "file_name": "healthcare.csv",
-        "other_parameters": {}
+        "other_parameters": {
+            "normalize": false
+        }
     }
 }
